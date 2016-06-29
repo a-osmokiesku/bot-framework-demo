@@ -1,4 +1,11 @@
-﻿using TeamCitySharper;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using EasyHttp.Infrastructure;
+using TeamCitySharper;
+using TeamCitySharper.Connection;
+using TeamCitySharper.Locators;
 
 namespace DemoBot.TeamCityIntegration
 {
@@ -13,19 +20,32 @@ namespace DemoBot.TeamCityIntegration
         public TCClient()
         {
             client = new TeamCityClient(Host);
-            client.Connect(Login,Password);
+            client.Connect(Login, Password);
         }
 
         public void RunBuild(string configName)
         {
-            var foo = client.BuildConfigs.ByConfigurationName(configName).Id;
-            client.Builds.Add2QueueBuildByBuildConfigId(foo);
+            var configId = client.BuildConfigs.ByConfigurationName(configName).Id;
+            client.Builds.Add2QueueBuildByBuildConfigId(configId);
+        }
+
+        public void RunBuild(string configName, string branchName)
+        {
+            var configId = client.BuildConfigs.ByConfigurationName(configName).Id;
+            client.Builds.Add2QueueByConfigurationAndBranch(configId, branchName);
         }
 
         public bool IsBuildConfigurationExist(string configName)
         {
-            var buildConfig = client.BuildConfigs.ByConfigurationName(configName);
-            return buildConfig != null;
+            try
+            {
+                client.BuildConfigs.ByConfigurationName(configName);
+            }
+            catch (HttpException)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

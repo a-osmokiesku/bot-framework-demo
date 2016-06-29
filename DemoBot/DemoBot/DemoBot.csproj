@@ -118,6 +118,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamCityIntegration\BuildsExtention.cs" />
     <Compile Include="TeamCityIntegration\TCClient.cs" />
   </ItemGroup>
   <ItemGroup>

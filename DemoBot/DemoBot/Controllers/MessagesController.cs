@@ -30,7 +30,7 @@ namespace DemoBot
                 return "I don't understand you. Maybe this configuration not found.";
             }
 
-            client.RunBuild(msg);
+            client.RunBuild(msg, "JB-12_Object_Provides_Text_Operations");
             return "Build is running.";
         }
 
