@@ -1,37 +1,37 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using DemoBot.TeamCityIntegration;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Utilities;
-using Newtonsoft.Json;
 
 namespace DemoBot
 {
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        /// <summary>
-        /// POST: api/Messages
-        /// Receive a message from a user and reply to it
-        /// </summary>
         public async Task<Message> Post([FromBody]Message message)
         {
             if (message.Type == "Message")
             {
-                // calculate something for us to return
-                int length = (message.Text ?? string.Empty).Length;
-
-                // return our reply to the user
-                return message.CreateReplyMessage(string.Format("You sent {0} characters", length));
+                var reply = await Reply(message.Text);
+                return message.CreateReplyMessage(string.Format(reply));
             }
             else
             {
                 return HandleSystemMessage(message);
             }
+        }
+
+        private async Task<string> Reply(string msg)
+        {
+            var client = new TCClient();
+            if (!client.IsBuildConfigurationExist(msg))
+            {
+                return "I don't understand you. Maybe this configuration not found.";
+            }
+
+            client.RunBuild(msg);
+            return "Build is running.";
         }
 
         private Message HandleSystemMessage(Message message)
@@ -44,8 +44,6 @@ namespace DemoBot
             }
             else if (message.Type == "DeleteUserData")
             {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
             }
             else if (message.Type == "BotAddedToConversation")
             {
