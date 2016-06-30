@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using EasyHttp.Infrastructure;
 using TeamCitySharper;
 using TeamCitySharper.Connection;
@@ -12,8 +13,8 @@ namespace DemoBot.TeamCityIntegration
     public class TCClient
     {
         private const string Login = "Artur_Osmokiesku";
-        private const string Password = "Jcvjrtcre93";
-        private const string Host = "137.116.205.47";
+        private const string Password = "1234";
+        private const string Host = "172.31.8.174:1000";
 
         private readonly TeamCityClient client;
 
@@ -40,6 +41,19 @@ namespace DemoBot.TeamCityIntegration
             try
             {
                 client.BuildConfigs.ByConfigurationName(configName);
+            }
+            catch (HttpException)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool IsProjectExist(string projectName)
+        {
+            try
+            {
+                client.Projects.ByName(projectName);
             }
             catch (HttpException)
             {
