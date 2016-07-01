@@ -22,25 +22,8 @@ namespace DemoBot
         public async Task MessageRecivedAsync(IDialogContext context, IAwaitable<Message> argument)
         {
             var message = await argument;
-            PromptDialog.Confirm(context, Subscribe,
-                string.Format("Are you sure to build branch {0} on configuration {1}?", state.BranchName, state.ConfigName));
-
             var reply = await Reply(message.Text);
             await context.PostAsync(reply);
-        }
-
-        private async Task Subscribe(IDialogContext context, IAwaitable<bool> result)
-        {
-            var answer = await result;
-            if (answer)
-            {
-                context.Wait(MessageRecivedAsync);
-            }
-            else
-            {
-                await context.PostAsync("Build canceled");
-            }
-            context.Wait(MessageRecivedAsync);
         }
 
         private async Task<string> Reply(string msg)
