@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DemoBot.TeamCityIntegration;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 
 namespace DemoBot
 {
@@ -12,8 +14,27 @@ namespace DemoBot
             BranchName = "master";
         }
 
+        public static IForm<BuildParam> BuildForm()
+        {
+            return new FormBuilder<BuildParam>()
+                .Message("Welcome to TeamCity assistent!")
+                .OnCompletion(Subscribe)
+                .Build();
+        }
+
+        private static async Task Subscribe(IDialogContext context, BuildParam data)
+        {
+            await context.PostAsync(await data.BuildResult());
+        }
+
+        [Prompt("What is the target project name?")]
         public string ProjectName { get; set; }
+
+        [Prompt("What is build configuration name?")]
         public string ConfigName { get; set; }
+
+        [Prompt("What is the target branch name?")]
+        [Optional]
         public string BranchName { get; set; }
 
         public async Task<string> BuildResult()

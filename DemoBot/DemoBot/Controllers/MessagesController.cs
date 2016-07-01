@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
 
 namespace DemoBot
@@ -10,13 +11,11 @@ namespace DemoBot
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        private BuildParam state = new BuildParam();
-
         public async Task<Message> Post([FromBody]Message message)
         {
             if (message.Type == "Message")
             {
-                return await Conversation.SendAsync(message, () => new BuildDialog());
+                return await Conversation.SendAsync(message, () => FormDialog.FromForm(BuildParam.BuildForm));
             }
             else
             {
