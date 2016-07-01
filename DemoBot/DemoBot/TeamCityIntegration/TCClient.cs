@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EasyHttp.Infrastructure;
 using TeamCitySharper;
 using TeamCitySharper.Connection;
+using TeamCitySharper.DomainEntities;
 using TeamCitySharper.Locators;
 
 namespace DemoBot.TeamCityIntegration

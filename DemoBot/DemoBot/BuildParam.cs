@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using DemoBot.TeamCityIntegration;
 
 namespace DemoBot
 {
+    [Serializable]
     public class BuildParam
     {
         public BuildParam()
